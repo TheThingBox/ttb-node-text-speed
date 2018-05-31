@@ -1,0 +1,82 @@
+<script type="text/x-red" data-template-name="speed">
+  <div class = "form-row" style = "padding-left: 15px;">
+    <label for="node-input-name"><i class = "icon-tag"></i> Name : </label>
+    <input type="text" id="node-input-name" style="width: 200px;"/>
+  </div>
+  <div class = "form-row" style = "padding-left: 15px;">
+    <label for="node-input-val"><i class = "icon-tag"></i> Speed : </label>
+    <input type="text" id="node-input-val" style = "width: 10%;" value = 3 />
+  </div>
+  <div class = "form-row" id = "slider" style = "width: 70%;display: block; margin-left: auto;  margin-right: auto;"></div>
+</script>
+
+<script type="text/x-red" data-help-name="speed">
+  <p>This node allows you to select a speed value information on the flow.</p>
+  <p>Values are between 0 and 5, where 0 is no speed, 1 is slow, and 5 is very fast</p>
+  <p>If no value is defined, the default speed is 3</p>
+
+  <h2>Advanced</h2>
+  <p>Informations are returned by the node in the <code>msg.<b>speed</b></code> property.</p>
+</script>
+
+<script type="text/javascript">
+  RED.nodes.registerType('speed', {
+    category: "ledmatrix",
+    defaults: {
+      name: {value: ""},
+      fix: {value: false},
+      val: {value: 3}
+    },
+    color: "#FFF",
+    icon: "tsa_speed.png",
+    paletteLabel : "Speed",
+    inputs: 1,
+    outputs: 1,
+    label: function() {
+      return this.name||this.property||"speed" + ": " + this.val;
+    },
+    oneditprepare:function(){
+      var value = parseInt(this.val);
+      var minimum = 0;
+      var maximum = 5;
+      // Init slider
+      $("#slider").slider({
+        create: function(event, ui){
+          if(value >= minimum && value <= maximum){
+            $("#slider").slider('value',value);
+          }
+          else{
+            $("#slider").slider('value',minimum);
+          }
+        },
+        min: minimum,
+        max: maximum,
+        slide: function(event, ui) {
+          $("#node-input-val").val(ui.value);
+        }
+      });
+
+      // When value changes
+      $("#node-input-val").change(function(){
+        if(this.value >= minimum && this.value <= maximum){
+          value = parseInt(this.value);
+          $("#slider").slider('value',parseInt(this.value));
+        }
+        else{
+          this.value = parseInt(minimum);
+          value = parseInt(minimum);
+          $("#slider").slider('value',value);
+        }
+      })
+      $("#node-input-val").click(function(){
+        $("#node-input-val").trigger("change");
+      });
+      $("#node-input-val").focus(function(){
+        $("#node-input-val").trigger("change");
+      });
+      $("#node-input-val").blur(function(){
+        $("#node-input-val").trigger("change");
+      });
+    }
+  });
+</script>

@@ -1,0 +1,10 @@
+{
+  "name": "speed",
+  "version": "1.0.0",
+  "description": "This node sets a speed attribute (between 0 and 5).",
+  "node-red": {
+    "nodes": {
+      "tsa_speed": "speed.js"
+    }
+  }
+}
